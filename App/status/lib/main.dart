@@ -1,4 +1,8 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong/latlong.dart';
+import 'secrets.dart';
 
 void main() => runApp(MyApp());
 
@@ -14,7 +18,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
 class WeatherDay extends StatelessWidget {
   // TODO: Add animations to icons - sun rotates, etc.
 
@@ -56,7 +59,6 @@ class WeatherDay extends StatelessWidget {
   }
 
 }
-
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key}) : super(key: key);
 
@@ -64,15 +66,44 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+class Map extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return FlutterMap(
+      options: new MapOptions(
+        center: new LatLng(51.5, -0.09),
+        zoom: 13.0,
+      ),
+      layers: [
+        new TileLayerOptions(
+          urlTemplate: "https://api.tiles.mapbox.com/v4/"
+              "{id}/{z}/{x}/{y}@2x.png?access_token={accessToken}",
+          additionalOptions: {
+            'accessToken': mapbox_api,
+            'id': 'mapbox.streets',
+          },
+        ),
+        new MarkerLayerOptions(
+          markers: [
+            new Marker(
+              width: 80.0,
+              height: 80.0,
+              point: new LatLng(51.5, -0.09),
+              builder: (ctx) =>
+              new Container(
+                child: new FlutterLogo(),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
   }
+  
+}
 
+class _MyHomePageState extends State<MyHomePage> {
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: const EdgeInsets.only(top: 40, bottom: 30),
               child: Center(
                 child: Text(
-                  'FALLING DOWNS',
+                  'Status',
                   style: TextStyle(
                     fontSize: 40
                   ),
@@ -113,11 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: ConstrainedBox(
                 constraints: BoxConstraints.expand(),
                 child: Card(
-                  child: Center(
-                    child: Text(
-                      'Map View'
-                    ),
-                  ),
+                  child: Map(),
                   color: Colors.grey,
                 ),
               ),
