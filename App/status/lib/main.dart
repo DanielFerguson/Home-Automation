@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 import 'secrets.dart';
+import 'sensor_icons.dart';
 
 void main() => runApp(MyApp());
 
@@ -71,27 +72,29 @@ class Map extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlutterMap(
       options: new MapOptions(
-        center: new LatLng(51.5, -0.09),
-        zoom: 13.0,
+        center: new LatLng(-37.596756, 143.554788),
+        zoom: 19.5,
       ),
+
       layers: [
         new TileLayerOptions(
           urlTemplate: "https://api.tiles.mapbox.com/v4/"
               "{id}/{z}/{x}/{y}@2x.png?access_token={accessToken}",
           additionalOptions: {
             'accessToken': mapbox_api,
-            'id': 'mapbox.streets',
+            'id': 'mapbox.satellite',
           },
         ),
+
         new MarkerLayerOptions(
           markers: [
             new Marker(
-              width: 80.0,
-              height: 80.0,
-              point: new LatLng(51.5, -0.09),
+              width: 5.0,
+              height: 5.0,
+              point: new LatLng(-37.596756, 143.554788),
               builder: (ctx) =>
               new Container(
-                child: new FlutterLogo(),
+                child: new Icon(Sensor.location_circled, color: Colors.green,),
               ),
             ),
           ],
